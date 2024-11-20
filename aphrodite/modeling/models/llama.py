@@ -30,6 +30,7 @@ from transformers import LlamaConfig
 from aphrodite.attention import Attention, AttentionMetadata
 from aphrodite.common.config import CacheConfig, LoRAConfig
 from aphrodite.common.sequence import IntermediateTensors, SamplerOutput
+from aphrodite.common.passthru import Passthru
 from aphrodite.common.utils import is_hip
 from aphrodite.distributed import (get_current_tp_rank_partition_size,
                                    get_pp_group,
@@ -311,6 +312,7 @@ class LlamaModel(nn.Module):
         intermediate_tensors: Optional[IntermediateTensors],
         inputs_embeds: Optional[torch.Tensor] = None,
     ) -> Union[torch.Tensor, IntermediateTensors]:
+        pass
         if get_pp_group().is_first_rank:
             if inputs_embeds is not None:
                 hidden_states = inputs_embeds
@@ -441,6 +443,7 @@ class LlamaForCausalLM(nn.Module, SupportsLoRA):
         kv_caches: List[torch.Tensor],
         attn_metadata: AttentionMetadata,
         intermediate_tensors: Optional[IntermediateTensors] = None,
+        passthru: Optional[Passthru] = None,
     ) -> Union[torch.Tensor, IntermediateTensors]:
         model_output = self.model(input_ids, positions, kv_caches,
                                   attn_metadata, intermediate_tensors)
@@ -588,3 +591,9 @@ class LlamaForCausalLM(nn.Module, SupportsLoRA):
             if item in mapping and mapping[item] not in name:
                 name = name.replace(item, mapping[item])
         return name, loaded_weight
+
+_printed = set()
+def print_once(key, *args, **kwargs):
+    if key not in _printed:
+        _printed.add(key)
+        print(key, *args, **kwargs)
