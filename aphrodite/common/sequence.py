@@ -12,6 +12,7 @@ import torch
 
 from aphrodite.common.pooling_params import PoolingParams
 from aphrodite.common.sampling_params import SamplingParams
+from aphrodite.common.passthru import Passthru
 from aphrodite.inputs.parse import is_valid_encoder_decoder_llm_inputs
 from aphrodite.lora.request import LoRARequest
 from aphrodite.prompt_adapter.request import PromptAdapterRequest
@@ -505,7 +506,6 @@ class SequenceGroup:
                      unless you are working with an encoder/decoder model.
         prompt_adapter_request: Prompt adapter request.
     """
-
     def __init__(
         self,
         request_id: str,
@@ -787,6 +787,7 @@ class SequenceGroupMetadata:
         encoder_seq_data: Optional[SequenceData] = None,
         cross_block_table: Optional[List[int]] = None,
         prompt_adapter_request: Optional[PromptAdapterRequest] = None,
+        passthru: Optional[Passthru] = None,
     ) -> None:
         self.request_id = request_id
         self.is_prompt = is_prompt
@@ -803,6 +804,7 @@ class SequenceGroupMetadata:
         self.cross_block_table = cross_block_table
         self._token_chunk_size = token_chunk_size
         self.do_sample = do_sample
+        self.passthru = passthru
 
         # The number of speculative tokens adopted in this request.
         # None means specuative decoding is not used.

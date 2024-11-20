@@ -23,6 +23,7 @@ from aphrodite.common.sequence import (EmbeddingSequenceGroupOutput,
                                        ExecuteModelRequest, PoolerOutput,
                                        SamplerOutput, Sequence, SequenceGroup,
                                        SequenceGroupMetadata, SequenceStatus)
+from aphrodite.common.passthru import Passthru
 from aphrodite.common.utils import Counter
 from aphrodite.engine.args_tools import EngineArgs
 from aphrodite.engine.metrics_types import StatLoggerBase, Stats
@@ -806,6 +807,7 @@ class AphroditeEngine:
         self,
         prompt_comps: PromptComponents,
         prompt_adapter_request: Optional[PromptAdapterRequest],
+        passthru: Optional[Passthru] = None,
     ) -> LLMInputs:
         prompt, prompt_token_ids, multi_modal_data = prompt_comps
 
@@ -814,7 +816,8 @@ class AphroditeEngine:
 
         return LLMInputs(prompt_token_ids=prompt_token_ids,
                          prompt=prompt,
-                         multi_modal_data=multi_modal_data)
+                         multi_modal_data=multi_modal_data,
+                         passthru=passthru)
 
     def _process_decoder_only_prompt(
         self,

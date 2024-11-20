@@ -1104,6 +1104,9 @@ class Scheduler:
             # prefill < decoding.
             is_prompt = seq_group.is_prefill()
 
+            passthru = None
+            if seq_group.seqs:
+                passthru = seq_group.seqs[0].inputs.get("passthru") # TODO:Luke could be a better way
             seq_group_metadata.__init__(
                 request_id=seq_group.request_id,
                 is_prompt=is_prompt,
@@ -1125,6 +1128,7 @@ class Scheduler:
                 multi_modal_data=seq_group.multi_modal_data
                 if scheduler_outputs.num_prefill_groups > 0 else None,
                 prompt_adapter_request=seq_group.prompt_adapter_request,
+                passthru=passthru,
             )
             seq_group_metadata_list.append(seq_group_metadata)
 

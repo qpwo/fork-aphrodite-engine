@@ -10,6 +10,8 @@ from loguru import logger
 from pydantic import Field
 from typing_extensions import Annotated
 
+from aphrodite.common.passthru import Passthru
+
 _SAMPLING_EPS = 1e-5
 _MAX_TEMP = 1e-2
 
@@ -145,6 +147,8 @@ class SamplingParams:
             above this threshold, consider removing all but the last one.
         xtc_probability: Probability that the removal will actually happen.
             0 disables the sampler, 1 makes it always happen.
+
+        passthru: (development only) Args passed through to model
     """
 
     def __init__(
@@ -189,6 +193,7 @@ class SamplingParams:
         truncate_prompt_tokens: Optional[Annotated[int, Field(ge=1)]] = None,
         xtc_threshold: float = 0.1,
         xtc_probability: float = 0,
+        passthru: Optional[Passthru] = None,
     ) -> None:
         self.n = n
         self.best_of = best_of if best_of is not None else n
@@ -253,6 +258,7 @@ class SamplingParams:
             self.output_text_buffer_length = 0
         self.xtc_threshold = xtc_threshold
         self.xtc_probability = xtc_probability
+        self.passthru = passthru
 
         self.default_values = {
             "n": 1,
@@ -294,6 +300,7 @@ class SamplingParams:
             "truncate_prompt_tokens": None,
             "xtc_threshold": 0.1,
             "xtc_probability": 0,
+            "passthru": None,
         }
 
         # Number of characters to hold back for stop string evaluation

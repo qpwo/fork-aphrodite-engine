@@ -12,6 +12,7 @@ from aphrodite.common.pooling_params import PoolingParams
 from aphrodite.common.sampling_params import (LogitsProcessorFunc,
                                               SamplingParams)
 from aphrodite.common.sequence import Logprob
+from aphrodite.common.passthru import Passthru
 from aphrodite.common.utils import random_uuid
 from aphrodite.endpoints.chat_utils import ChatCompletionMessageParam
 from aphrodite.endpoints.openai.logits_processors import get_logits_processors
@@ -147,6 +148,7 @@ class ChatCompletionRequest(OpenAIBaseModel):
     prompt_logprobs: Optional[int] = None
     xtc_threshold: Optional[float] = 0.1
     xtc_probability: Optional[float] = 0.0
+    passthru: Optional[Passthru] = None
     dynatemp_min: Optional[float] = 0.0
     dynatemp_max: Optional[float] = 0.0
     dynatemp_exponent: Optional[float] = 1.0
@@ -290,6 +292,7 @@ class ChatCompletionRequest(OpenAIBaseModel):
             temperature_last=self.temperature_last,
             xtc_threshold=self.xtc_threshold,
             xtc_probability=self.xtc_probability,
+            passthru=self.passthru,
             dynatemp_min=self.dynatemp_min,
             dynatemp_max=self.dynatemp_max,
             dynatemp_exponent=self.dynatemp_exponent,
@@ -401,6 +404,7 @@ class CompletionRequest(OpenAIBaseModel):
     prompt_logprobs: Optional[int] = None
     xtc_threshold: Optional[float] = 0.1
     xtc_probability: Optional[float] = 0.0
+    passthru: Optional[Passthru] = None
     dynatemp_min: Optional[float] = 0.0
     dynatemp_max: Optional[float] = 0.0
     dynatemp_exponent: Optional[float] = 1.0
@@ -503,6 +507,7 @@ class CompletionRequest(OpenAIBaseModel):
             temperature_last=self.temperature_last,
             xtc_threshold=self.xtc_threshold,
             xtc_probability=self.xtc_probability,
+            passthru=self.passthru,
             dynatemp_min=self.dynatemp_min,
             dynatemp_max=self.dynatemp_max,
             dynatemp_exponent=self.dynatemp_exponent,
@@ -808,6 +813,7 @@ class KAIGenerationInputSchema(BaseModel):
     smoothing_curve: Optional[float] = 1.0
     xtc_threshold: Optional[float] = 0.1
     xtc_probability: Optional[float] = 0.0
+    passthru: Optional[Passthru] = None
     use_default_badwordsids: Optional[bool] = None
     quiet: Optional[bool] = None
     # pylint: disable=unexpected-keyword-arg
